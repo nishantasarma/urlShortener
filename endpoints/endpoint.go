@@ -6,7 +6,11 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"fmt"
 )
+
+const shortUrlLength = 4
+
 type StoreHandler struct {
 	Store map[string]string
 }
@@ -18,25 +22,25 @@ func NewstoreHandlers() *StoreHandler {
 	}
 
 }
-func (u *StoreHandler) Shortenurl(w http.ResponseWriter, r *http.Request) {
+func (u *StoreHandler) ShortenUrl(w http.ResponseWriter, r *http.Request) {
 	
-	check_url := strings.Split(r.URL.Path, "/")[2]
+	CheckUrl := strings.Split(r.URL.Path, "/")[2]
 
-	if len(check_url) > 1 {
+	if len(CheckUrl) > 1 {
 		var short_url string
 	
 		rand.Seed(time.Now().UnixNano())
 		chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ" +
 			"abcdefghijklmnopqrstuvwxyzåäö" +
 			"0123456789")
-		length := 4
+
 		var b strings.Builder
-		for i := 0; i < length; i++ {
+		for i := 0; i < shortUrlLength ; i++ {
 			b.WriteRune(chars[rand.Intn(len(chars))])
 		}
 		short_url = b.String()
 
-		u.Store[short_url] = check_url
+		u.Store[short_url] = CheckUrl
 
 	}
 
@@ -59,7 +63,7 @@ func (u *StoreHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 
 		if val, ok := u.Store[redirect_url]; ok {
 
-			http.Redirect(w, r, "http://"+val, http.StatusMovedPermanently)
+			http.Redirect(w, r,fmt.Sprintf("http://%s", val), http.StatusMovedPermanently)
 		}
 
 	}
