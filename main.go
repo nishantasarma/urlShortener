@@ -4,6 +4,7 @@ import (
 
 	"net/http"
 	"example/urlshortener/endpoints"
+	"log"
 
 )
 
@@ -11,12 +12,8 @@ func main() {
 
 	urlstore := endpoint.NewstoreHandlers()
 
-	http.HandleFunc("/save/", urlstore.Shortenurl)
+	http.HandleFunc("/save/", urlstore.ShortenUrl)
 	http.HandleFunc("/", urlstore.Redirect)
-	err := http.ListenAndServe(":8080", nil)
-
-	if err != nil {
-		panic(err)
-	}
-
+	log.Println("Listening on port 8080...")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
