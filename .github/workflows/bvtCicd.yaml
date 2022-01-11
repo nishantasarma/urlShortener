@@ -2,7 +2,7 @@ name: BVT
 
 on: 
   push:
-  branches: [add_urlshortener]
+    branches: [add_urlshortener]
 
 jobs:
   build:
