@@ -1,0 +1,23 @@
+name: BVT
+
+on: 
+  push:
+  branches: [add_urlshortener]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+     
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      
+      - name: build and deploy docker image to dockerhub
+
+        run: |
+          echo "iseedeadpeople1*"| docker login --username nishanta --password-stdin \
+          && docker build -t nishanta/urlshortener:latest . \
+          && docker push nishanta/urlshortener:latest
+      
