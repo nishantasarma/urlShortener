@@ -2,11 +2,12 @@ package endpoint
 
 import (
 	"encoding/json"
+	model "example/urlshortener/models"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"strings"
 	"time"
-	"fmt"
 )
 
 const shortUrlLength = 4
@@ -16,34 +17,33 @@ type StoreHandler struct {
 }
 
 func NewstoreHandlers() *StoreHandler {
-	return &StoreHandler{
-
-		Store: map[string]string{},
-	}
+	u := StoreHandler{Store: map[string]string{}}
+	return &u
 
 }
-func (u *StoreHandler) ShortenUrl(w http.ResponseWriter, r *http.Request) {
-	
-	CheckUrl := strings.Split(r.URL.Path, "/")[2]
 
-	if len(CheckUrl) > 1 {
-		var short_url string
-	
+func (u *StoreHandler) ShortenUrl(w http.ResponseWriter, r *http.Request) {
+
+	longUrl := strings.Split(r.URL.Path, "/")[2]
+	var shortUrl string
+	if len(longUrl) > 1 {
+
 		rand.Seed(time.Now().UnixNano())
 		chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ" +
 			"abcdefghijklmnopqrstuvwxyzåäö" +
 			"0123456789")
 
 		var b strings.Builder
-		for i := 0; i < shortUrlLength ; i++ {
+		for i := 0; i < shortUrlLength; i++ {
 			b.WriteRune(chars[rand.Intn(len(chars))])
 		}
-		short_url = b.String()
+		shortUrl = b.String()
 
-		u.Store[short_url] = CheckUrl
+		u.Store[shortUrl] = longUrl
 
 	}
-
+	model.Insertdb(shortUrl, longUrl)
+	u.Store = *model.Getdb()
 	jsonBytes, err := json.Marshal(u.Store)
 
 	if err != nil {
@@ -54,7 +54,6 @@ func (u *StoreHandler) ShortenUrl(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
 func (u *StoreHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 
 	redirect_url := strings.Split(r.URL.Path, "/")[1]
@@ -63,10 +62,12 @@ func (u *StoreHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 
 		if val, ok := u.Store[redirect_url]; ok {
 
-			http.Redirect(w, r,fmt.Sprintf("http://%s", val), http.StatusMovedPermanently)
+			http.Redirect(w, r, fmt.Sprintf("http://%s", val), http.StatusMovedPermanently)
 		}
 
 	}
+
+	u.Store = *model.Getdb()
 
 	jsonBytes, err := json.Marshal(u.Store)
 
