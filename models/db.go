@@ -10,7 +10,7 @@ import (
 )
 
 func initConnection() *sql.DB {
-	db, err := sql.Open("mysql", "root:helloworld@tcp(localhost:3306)/urlmap")
+	db, err := sql.Open("mysql", "root:helloworld@tcp(mysql-db.app:3306)/urlmap")
 
 	if err != nil {
 		log.Fatal(err)
