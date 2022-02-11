@@ -39,8 +39,6 @@ func (u *StoreHandler) ShortenUrl(w http.ResponseWriter, r *http.Request) {
 		}
 		shortUrl = b.String()
 
-		u.Store[shortUrl] = longUrl
-
 	}
 	model.Insertdb(shortUrl, longUrl)
 	u.Store = *model.Getdb()
