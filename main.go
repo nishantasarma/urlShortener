@@ -1,11 +1,11 @@
+// Rest api for urlshortener
+
 package main
 
 import (
-
-	"net/http"
-	"example/urlshortener/endpoints"
+	endpoint "example/urlshortener/endpoints"
 	"log"
-
+	"net/http"
 )
 
 func main() {
