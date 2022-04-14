@@ -1,3 +1,5 @@
+# Multi stage Dockerfile to builurlshortener app
+
 FROM golang:1.17 AS BUILDER
 WORKDIR /app
 COPY . .

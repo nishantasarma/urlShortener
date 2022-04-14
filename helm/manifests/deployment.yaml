@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: urlshortener
+  name: urlshortener
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urlshortener
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: urlshortener
+    spec:
+      containers:
+      - image: nishanta/urlshortener
+        name: urlshortener
+        ports:
+        - containerPort: 8080
+
